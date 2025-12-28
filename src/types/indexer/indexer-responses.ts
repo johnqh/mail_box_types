@@ -3,7 +3,7 @@
  * @description Comprehensive type definitions for all indexer API endpoints
  */
 
-import { Optional, WalletData, ApiResponse } from '../common';
+import type { Optional, WalletData, ApiResponse } from '@sudobility/types';
 
 // Name service account
 export interface IndexerNameServiceAccount {

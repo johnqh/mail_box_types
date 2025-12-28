@@ -8,7 +8,7 @@
  * - Accredited: Enhanced + financial verification for accredited investors
  */
 
-import type { ChainType } from '../common';
+import type { ChainType } from '@sudobility/types';
 
 // ============================================
 // Verification Levels

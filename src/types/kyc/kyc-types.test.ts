@@ -17,7 +17,7 @@ import type {
   VerifyUserRequest,
   VerifyUserResponse,
 } from './kyc-types';
-import { ChainType } from '../common';
+import { ChainType } from '@sudobility/types';
 
 describe('KYC Types', () => {
   describe('KYCVerificationLevel Enum', () => {

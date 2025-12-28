@@ -1,6 +1,3 @@
-// Common types
-export * from './common';
-
 // Indexer types
 export * from './indexer';
 
@@ -9,3 +6,6 @@ export * from './wildduck';
 
 // KYC types
 export * from './kyc';
+
+// Mailer types
+export * from './mailer';
