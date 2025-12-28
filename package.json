@@ -1,5 +1,5 @@
 {
-  "name": "@anthropic/mail_box_types",
+  "name": "@sudobility/mail_box_types",
   "version": "1.0.1",
   "description": "TypeScript types for Mail Box services - indexer, WildDuck, and KYC",
   "main": "./dist/index.cjs",
