@@ -1,10 +1,17 @@
 # CLAUDE.md - AI Development Guide
 
-This file provides context for AI assistants working with this codebase.
+This file provides comprehensive guidance for AI assistants (Claude Code, GitHub Copilot, Cursor, etc.) working with this codebase.
 
 ## Project Overview
 
-`@sudobility/mail_box_types` is a TypeScript types library providing comprehensive type definitions for Mail Box services:
+`@sudobility/mail_box_types` is a TypeScript types library providing comprehensive type definitions for Mail Box services.
+
+**Package**: `@sudobility/mail_box_types`
+**Version**: 1.0.2
+**Type**: ES Module + CommonJS
+**Test Coverage**: 202 tests across 5 test files
+
+The library provides:
 
 - **Indexer API types**: API responses and type guards for the Mail Box Indexer service
 - **WildDuck types**: Mail server API types including REST and WebSocket interfaces
@@ -38,19 +45,31 @@ src/
         └── mail-types.ts       # Mailbox contract response types
 ```
 
+## Package Manager
+
+**This project uses Bun as the package manager.** Always use `bun` commands instead of `npm`:
+
+```bash
+# Install dependencies
+bun install
+
+# Run any script
+bun run <script-name>
+```
+
 ## Key Commands
 
 ```bash
-npm run build        # Build ESM and CJS outputs
-npm run typecheck    # Run TypeScript compiler (no emit)
-npm run lint         # Run ESLint
-npm run lint:fix     # Run ESLint with auto-fix
-npm run format       # Format code with Prettier
-npm run format:check # Check formatting
-npm run test         # Run all tests
-npm run test:watch   # Run tests in watch mode
-npm run test:coverage # Run tests with coverage report
-npm run clean        # Remove dist folder
+bun run build        # Build ESM and CJS outputs
+bun run typecheck    # Run TypeScript compiler (no emit)
+bun run lint         # Run ESLint
+bun run lint:fix     # Run ESLint with auto-fix
+bun run format       # Format code with Prettier
+bun run format:check # Check formatting
+bun run test         # Run all tests
+bun run test:watch   # Run tests in watch mode
+bun run test:coverage # Run tests with coverage report
+bun run clean        # Remove dist folder
 ```
 
 ## Development Guidelines
@@ -177,9 +196,9 @@ Mailbox contract response types for multi-chain messaging:
 Tests are written using Vitest and located alongside source files with `.test.ts` extension.
 
 ```bash
-npm run test         # Run all tests once
-npm run test:watch   # Run tests in watch mode
-npm run test:coverage # Run tests with coverage
+bun run test         # Run all tests once
+bun run test:watch   # Run tests in watch mode
+bun run test:coverage # Run tests with coverage
 ```
 
 ### Test Files
@@ -204,5 +223,5 @@ npm run test:coverage # Run tests with coverage
 3. Import common types from `@sudobility/types`
 4. Ensure the module's `index.ts` re-exports the new types
 5. Add tests for type guards and helper functions in a corresponding `.test.ts` file
-6. Run `npm run typecheck`, `npm run lint`, and `npm run test` to verify
-7. Run `npm run build` to generate outputs
+6. Run `bun run typecheck`, `bun run lint`, and `bun run test` to verify
+7. Run `bun run build` to generate outputs

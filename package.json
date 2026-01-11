@@ -1,6 +1,6 @@
 {
   "name": "@sudobility/mail_box_types",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "TypeScript types for Mail Box services - indexer, WildDuck, and KYC",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -13,9 +13,9 @@
     }
   },
   "scripts": {
-    "build": "npm run build:esm && npm run build:cjs",
+    "build": "bun run build:esm && bun run build:cjs",
     "build:esm": "tsc -p tsconfig.esm.json",
-    "build:cjs": "tsc -p tsconfig.cjs.json && npm run build:cjs-rename",
+    "build:cjs": "tsc -p tsconfig.cjs.json && bun run build:cjs-rename",
     "build:cjs-rename": "find dist -name '*.js' -not -name '*.cjs' -exec sh -c 'cp \"$1\" \"${1%.js}.cjs\"' _ {} \\;",
     "clean": "rimraf dist",
     "dev": "tsc --watch",
@@ -27,7 +27,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
-    "prepublishOnly": "npm run clean && npm run build"
+    "prepublishOnly": "bun run clean && bun run build"
   },
   "files": [
     "dist/**/*",
@@ -45,7 +45,7 @@
   "license": "MIT",
   "devDependencies": {
     "@eslint/js": "^9.38.0",
-    "@sudobility/types": "^1.9.36",
+    "@sudobility/types": "^1.9.44",
     "@types/node": "^24.9.1",
     "@typescript-eslint/eslint-plugin": "^8.46.2",
     "@typescript-eslint/parser": "^8.46.2",
@@ -58,7 +58,7 @@
     "vitest": "^4.0.16"
   },
   "peerDependencies": {
-    "@sudobility/types": "^1.9.35"
+    "@sudobility/types": "^1.9.44"
   },
   "publishConfig": {
     "access": "public"
