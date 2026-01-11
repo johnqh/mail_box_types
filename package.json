@@ -1,6 +1,6 @@
 {
   "name": "@sudobility/mail_box_types",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "TypeScript types for Mail Box services - indexer, WildDuck, and KYC",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -24,14 +24,16 @@
     "format": "prettier --write \"src/**/*.{ts,js,json,md}\"",
     "format:check": "prettier --check \"src/**/*.{ts,js,json,md}\"",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run",
-    "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage",
-    "prepublishOnly": "bun run clean && bun run build"
+    "test": "vitest",
+    "test:watch": "vitest --watch",
+    "test:coverage": "vitest --coverage",
+    "verify": "bun run typecheck && bun run lint && bun run test && bun run build",
+    "prepublishOnly": "bun run clean && bun run verify"
   },
   "files": [
     "dist/**/*",
-    "README.md"
+    "README.md",
+    "CLAUDE.md"
   ],
   "keywords": [
     "typescript",
