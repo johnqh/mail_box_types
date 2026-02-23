@@ -11,6 +11,7 @@ import {
   createWildduckUnsubscribeRequest,
   createWildduckFetchMessagesRequest,
 } from './wildduck-websocket-types';
+import type { WildduckWebSocketChannel } from './wildduck-websocket-types';
 
 describe('WildDuck WebSocket Type Guards', () => {
   describe('isWildduckSubscribeRequest', () => {
@@ -27,7 +28,11 @@ describe('WildDuck WebSocket Type Guards', () => {
       const request = {
         type: 'subscribe',
         channel: 'messages',
-        data: { userId: 'user123', token: 'token123', mailboxId: 'mailbox123' },
+        data: {
+          userId: 'user123',
+          token: 'token123',
+          mailboxId: 'mailbox123',
+        },
       };
       expect(isWildduckSubscribeRequest(request)).toBe(true);
     });
@@ -58,6 +63,26 @@ describe('WildDuck WebSocket Type Guards', () => {
     it('returns false for undefined', () => {
       expect(isWildduckSubscribeRequest(undefined)).toBe(false);
     });
+
+    it('returns false for primitive values', () => {
+      expect(isWildduckSubscribeRequest('string')).toBe(false);
+      expect(isWildduckSubscribeRequest(123)).toBe(false);
+      expect(isWildduckSubscribeRequest(true)).toBe(false);
+    });
+
+    it('returns false for empty object', () => {
+      expect(isWildduckSubscribeRequest({})).toBe(false);
+    });
+
+    it('returns false for type as number', () => {
+      expect(
+        isWildduckSubscribeRequest({
+          type: 1,
+          channel: 'mailboxes',
+          data: {},
+        })
+      ).toBe(false);
+    });
   });
 
   describe('isWildduckUnsubscribeRequest', () => {
@@ -86,6 +111,19 @@ describe('WildDuck WebSocket Type Guards', () => {
 
     it('returns false for null', () => {
       expect(isWildduckUnsubscribeRequest(null)).toBe(false);
+    });
+
+    it('returns false for undefined', () => {
+      expect(isWildduckUnsubscribeRequest(undefined)).toBe(false);
+    });
+
+    it('returns false for empty object', () => {
+      expect(isWildduckUnsubscribeRequest({})).toBe(false);
+    });
+
+    it('returns false for primitive values', () => {
+      expect(isWildduckUnsubscribeRequest('string')).toBe(false);
+      expect(isWildduckUnsubscribeRequest(42)).toBe(false);
     });
   });
 
@@ -129,6 +167,23 @@ describe('WildDuck WebSocket Type Guards', () => {
     it('returns false for null', () => {
       expect(isWildduckFetchRequest(null)).toBe(false);
     });
+
+    it('returns false for undefined', () => {
+      expect(isWildduckFetchRequest(undefined)).toBe(false);
+    });
+
+    it('returns false for empty object', () => {
+      expect(isWildduckFetchRequest({})).toBe(false);
+    });
+
+    it('returns false for missing type', () => {
+      expect(
+        isWildduckFetchRequest({
+          channel: 'messages',
+          data: {},
+        })
+      ).toBe(false);
+    });
   });
 
   describe('isWildduckDataMessage', () => {
@@ -136,7 +191,10 @@ describe('WildDuck WebSocket Type Guards', () => {
       const message = {
         type: 'data',
         channel: 'mailboxes',
-        data: { code: 200, response: { success: true, mailboxes: [] } },
+        data: {
+          code: 200,
+          response: { success: true, mailboxes: [] },
+        },
       };
       expect(isWildduckDataMessage(message)).toBe(true);
     });
@@ -167,6 +225,20 @@ describe('WildDuck WebSocket Type Guards', () => {
     it('returns false for null', () => {
       expect(isWildduckDataMessage(null)).toBe(false);
     });
+
+    it('returns false for undefined', () => {
+      expect(isWildduckDataMessage(undefined)).toBe(false);
+    });
+
+    it('returns false for empty object', () => {
+      expect(isWildduckDataMessage({})).toBe(false);
+    });
+
+    it('returns false for missing channel', () => {
+      expect(
+        isWildduckDataMessage({ type: 'data', data: {} })
+      ).toBe(false);
+    });
   });
 
   describe('isWildduckUpdateMessage', () => {
@@ -174,7 +246,10 @@ describe('WildDuck WebSocket Type Guards', () => {
       const message = {
         type: 'update',
         channel: 'mailboxes',
-        data: { code: 200, response: { success: true, updates: [] } },
+        data: {
+          code: 200,
+          response: { success: true, updates: [] },
+        },
       };
       expect(isWildduckUpdateMessage(message)).toBe(true);
     });
@@ -183,7 +258,10 @@ describe('WildDuck WebSocket Type Guards', () => {
       const message = {
         type: 'update',
         channel: 'messages',
-        data: { code: 200, response: { success: true, updates: [] } },
+        data: {
+          code: 200,
+          response: { success: true, updates: [] },
+        },
       };
       expect(isWildduckUpdateMessage(message)).toBe(true);
     });
@@ -204,6 +282,14 @@ describe('WildDuck WebSocket Type Guards', () => {
 
     it('returns false for null', () => {
       expect(isWildduckUpdateMessage(null)).toBe(false);
+    });
+
+    it('returns false for undefined', () => {
+      expect(isWildduckUpdateMessage(undefined)).toBe(false);
+    });
+
+    it('returns false for empty object', () => {
+      expect(isWildduckUpdateMessage({})).toBe(false);
     });
   });
 
@@ -238,6 +324,19 @@ describe('WildDuck WebSocket Type Guards', () => {
     it('returns false for null', () => {
       expect(isWildduckDisconnectMessage(null)).toBe(false);
     });
+
+    it('returns false for undefined', () => {
+      expect(isWildduckDisconnectMessage(undefined)).toBe(false);
+    });
+
+    it('returns false for empty object', () => {
+      expect(isWildduckDisconnectMessage({})).toBe(false);
+    });
+
+    it('returns false for primitive values', () => {
+      expect(isWildduckDisconnectMessage('string')).toBe(false);
+      expect(isWildduckDisconnectMessage(123)).toBe(false);
+    });
   });
 
   describe('isWildduckWebSocketErrorResponse', () => {
@@ -267,6 +366,29 @@ describe('WildDuck WebSocket Type Guards', () => {
 
     it('returns false for null', () => {
       expect(isWildduckWebSocketErrorResponse(null)).toBe(false);
+    });
+
+    it('returns false for undefined', () => {
+      expect(isWildduckWebSocketErrorResponse(undefined)).toBe(false);
+    });
+
+    it('returns false for empty object', () => {
+      expect(isWildduckWebSocketErrorResponse({})).toBe(false);
+    });
+
+    it('returns false for primitive values', () => {
+      expect(isWildduckWebSocketErrorResponse('string')).toBe(false);
+      expect(isWildduckWebSocketErrorResponse(123)).toBe(false);
+    });
+
+    it('returns false for success as string "false"', () => {
+      expect(
+        isWildduckWebSocketErrorResponse({
+          success: 'false',
+          error: 'err',
+          message: 'msg',
+        })
+      ).toBe(false);
     });
   });
 });
@@ -330,14 +452,82 @@ describe('WildDuck WebSocket Helper Functions', () => {
       expect(request).toEqual({
         type: 'subscribe',
         channel: 'messages',
-        data: { userId: 'user123', token: 'token456', mailboxId: 'inbox789' },
+        data: {
+          userId: 'user123',
+          token: 'token456',
+          mailboxId: 'inbox789',
+        },
       });
+    });
+
+    it('throws for invalid channel', () => {
+      expect(() =>
+        createWildduckSubscribeRequest(
+          'invalid' as WildduckWebSocketChannel,
+          {
+            userId: 'user123',
+            token: 'token456',
+          }
+        )
+      ).toThrow('channel must be one of');
+    });
+
+    it('throws for empty channel', () => {
+      expect(() =>
+        createWildduckSubscribeRequest(
+          '' as WildduckWebSocketChannel,
+          {
+            userId: 'user123',
+            token: 'token456',
+          }
+        )
+      ).toThrow('channel must be one of');
+    });
+
+    it('throws for empty userId', () => {
+      expect(() =>
+        createWildduckSubscribeRequest('mailboxes', {
+          userId: '',
+          token: 'token456',
+        })
+      ).toThrow('data.userId must be a non-empty string');
+    });
+
+    it('throws for empty token', () => {
+      expect(() =>
+        createWildduckSubscribeRequest('mailboxes', {
+          userId: 'user123',
+          token: '',
+        })
+      ).toThrow('data.token must be a non-empty string');
+    });
+
+    it('throws for null data', () => {
+      expect(() =>
+        createWildduckSubscribeRequest(
+          'mailboxes',
+          null as unknown as { userId: string; token: string }
+        )
+      ).toThrow('data must be a non-null object');
+    });
+
+    it('throws for messages channel with empty mailboxId', () => {
+      expect(() =>
+        createWildduckSubscribeRequest('messages', {
+          userId: 'user123',
+          token: 'token456',
+          mailboxId: '',
+        })
+      ).toThrow(
+        'data.mailboxId must be a non-empty string for messages channel'
+      );
     });
   });
 
   describe('createWildduckUnsubscribeRequest', () => {
     it('creates an unsubscribe request for mailboxes', () => {
-      const request = createWildduckUnsubscribeRequest('mailboxes');
+      const request =
+        createWildduckUnsubscribeRequest('mailboxes');
       expect(request).toEqual({
         type: 'unsubscribe',
         channel: 'mailboxes',
@@ -346,7 +536,8 @@ describe('WildDuck WebSocket Helper Functions', () => {
     });
 
     it('creates an unsubscribe request for settings', () => {
-      const request = createWildduckUnsubscribeRequest('settings');
+      const request =
+        createWildduckUnsubscribeRequest('settings');
       expect(request).toEqual({
         type: 'unsubscribe',
         channel: 'settings',
@@ -355,7 +546,8 @@ describe('WildDuck WebSocket Helper Functions', () => {
     });
 
     it('creates an unsubscribe request for filters', () => {
-      const request = createWildduckUnsubscribeRequest('filters');
+      const request =
+        createWildduckUnsubscribeRequest('filters');
       expect(request).toEqual({
         type: 'unsubscribe',
         channel: 'filters',
@@ -364,7 +556,8 @@ describe('WildDuck WebSocket Helper Functions', () => {
     });
 
     it('creates an unsubscribe request for autoreply', () => {
-      const request = createWildduckUnsubscribeRequest('autoreply');
+      const request =
+        createWildduckUnsubscribeRequest('autoreply');
       expect(request).toEqual({
         type: 'unsubscribe',
         channel: 'autoreply',
@@ -373,18 +566,44 @@ describe('WildDuck WebSocket Helper Functions', () => {
     });
 
     it('creates an unsubscribe request for messages', () => {
-      const request = createWildduckUnsubscribeRequest('messages');
+      const request =
+        createWildduckUnsubscribeRequest('messages');
       expect(request).toEqual({
         type: 'unsubscribe',
         channel: 'messages',
         data: {},
       });
     });
+
+    it('throws for invalid channel', () => {
+      expect(() =>
+        createWildduckUnsubscribeRequest(
+          'invalid' as WildduckWebSocketChannel
+        )
+      ).toThrow('channel must be one of');
+    });
+
+    it('throws for empty channel', () => {
+      expect(() =>
+        createWildduckUnsubscribeRequest(
+          '' as WildduckWebSocketChannel
+        )
+      ).toThrow('channel must be one of');
+    });
+
+    it('throws for null channel', () => {
+      expect(() =>
+        createWildduckUnsubscribeRequest(
+          null as unknown as WildduckWebSocketChannel
+        )
+      ).toThrow('channel must be one of');
+    });
   });
 
   describe('createWildduckFetchMessagesRequest', () => {
     it('creates a fetch request without cursor', () => {
-      const request = createWildduckFetchMessagesRequest('mailbox123');
+      const request =
+        createWildduckFetchMessagesRequest('mailbox123');
       expect(request).toEqual({
         type: 'fetch',
         channel: 'messages',
@@ -393,7 +612,10 @@ describe('WildDuck WebSocket Helper Functions', () => {
     });
 
     it('creates a fetch request with cursor', () => {
-      const request = createWildduckFetchMessagesRequest('mailbox123', 'cursor456');
+      const request = createWildduckFetchMessagesRequest(
+        'mailbox123',
+        'cursor456'
+      );
       expect(request).toEqual({
         type: 'fetch',
         channel: 'messages',
@@ -402,13 +624,49 @@ describe('WildDuck WebSocket Helper Functions', () => {
     });
 
     it('does not include cursor when undefined', () => {
-      const request = createWildduckFetchMessagesRequest('mailbox123', undefined);
+      const request = createWildduckFetchMessagesRequest(
+        'mailbox123',
+        undefined
+      );
       expect(request.data).not.toHaveProperty('cursor');
     });
 
     it('does not include cursor when empty string', () => {
-      const request = createWildduckFetchMessagesRequest('mailbox123', '');
+      const request = createWildduckFetchMessagesRequest(
+        'mailbox123',
+        ''
+      );
       expect(request.data).not.toHaveProperty('cursor');
+    });
+
+    it('throws for empty mailboxId', () => {
+      expect(() =>
+        createWildduckFetchMessagesRequest('')
+      ).toThrow('mailboxId must be a non-empty string');
+    });
+
+    it('throws for non-string mailboxId', () => {
+      expect(() =>
+        createWildduckFetchMessagesRequest(
+          123 as unknown as string
+        )
+      ).toThrow('mailboxId must be a non-empty string');
+    });
+
+    it('throws for null mailboxId', () => {
+      expect(() =>
+        createWildduckFetchMessagesRequest(
+          null as unknown as string
+        )
+      ).toThrow('mailboxId must be a non-empty string');
+    });
+
+    it('throws for undefined mailboxId', () => {
+      expect(() =>
+        createWildduckFetchMessagesRequest(
+          undefined as unknown as string
+        )
+      ).toThrow('mailboxId must be a non-empty string');
     });
   });
 });

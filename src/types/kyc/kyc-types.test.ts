@@ -37,6 +37,13 @@ describe('KYC Types', () => {
       const values = Object.values(KYCVerificationLevel);
       expect(values).toHaveLength(3);
     });
+
+    it('values are all lowercase strings', () => {
+      Object.values(KYCVerificationLevel).forEach((value) => {
+        expect(typeof value).toBe('string');
+        expect(value).toBe(value.toLowerCase());
+      });
+    });
   });
 
   describe('KYCApplicationStatus Enum', () => {
@@ -52,6 +59,13 @@ describe('KYC Types', () => {
     it('has exactly 6 values', () => {
       const values = Object.values(KYCApplicationStatus);
       expect(values).toHaveLength(6);
+    });
+
+    it('values are all uppercase strings', () => {
+      Object.values(KYCApplicationStatus).forEach((value) => {
+        expect(typeof value).toBe('string');
+        expect(value).toBe(value.toUpperCase());
+      });
     });
   });
 
@@ -127,8 +141,29 @@ describe('KYC Types', () => {
       };
 
       expect(application.id).toBe('app123');
-      expect(application.verificationLevel).toBe(KYCVerificationLevel.Basic);
+      expect(application.verificationLevel).toBe(
+        KYCVerificationLevel.Basic
+      );
       expect(application.status).toBe(KYCApplicationStatus.Pending);
+    });
+
+    it('KYCApplication supports null sumsubApplicantId', () => {
+      const application: KYCApplication = {
+        id: 'app456',
+        walletAddress: '0x5678',
+        email: 'test2@example.com',
+        chainType: ChainType.SOLANA,
+        sumsubApplicantId: null,
+        metadata: {},
+        verificationLevel: KYCVerificationLevel.Enhanced,
+        status: KYCApplicationStatus.Initiated,
+        retryCount: 1,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+
+      expect(application.sumsubApplicantId).toBeNull();
+      expect(application.retryCount).toBe(1);
     });
 
     it('VerificationResult interface works correctly', () => {

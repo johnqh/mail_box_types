@@ -653,15 +653,68 @@ export const isWildduckWebSocketErrorResponse = (
 // Helper Functions
 // ============================================================================
 
+/** Valid WebSocket channel values */
+const VALID_CHANNELS: readonly WildduckWebSocketChannel[] = [
+  'mailboxes',
+  'settings',
+  'filters',
+  'autoreply',
+  'messages',
+];
+
 /**
  * Create a subscribe request message
  */
-export function createWildduckSubscribeRequest<T extends WildduckWebSocketChannel>(
+export function createWildduckSubscribeRequest<
+  T extends WildduckWebSocketChannel,
+>(
   channel: T,
   data: T extends 'messages'
     ? WildduckWebSocketAuthData & { mailboxId: WildduckObjectId }
     : WildduckWebSocketAuthData
 ): WildduckSubscribeRequest {
+  if (
+    !channel ||
+    typeof channel !== 'string' ||
+    !VALID_CHANNELS.includes(channel)
+  ) {
+    throw new Error(
+      `createWildduckSubscribeRequest: channel must be one of: ${VALID_CHANNELS.join(', ')}`
+    );
+  }
+  if (!data || typeof data !== 'object') {
+    throw new Error(
+      'createWildduckSubscribeRequest: data must be a non-null object'
+    );
+  }
+  if (
+    !('userId' in data) ||
+    !data.userId ||
+    typeof data.userId !== 'string'
+  ) {
+    throw new Error(
+      'createWildduckSubscribeRequest: data.userId must be a non-empty string'
+    );
+  }
+  if (
+    !('token' in data) ||
+    !data.token ||
+    typeof data.token !== 'string'
+  ) {
+    throw new Error(
+      'createWildduckSubscribeRequest: data.token must be a non-empty string'
+    );
+  }
+  if (channel === 'messages') {
+    const msgData = data as WildduckWebSocketAuthData & {
+      mailboxId: WildduckObjectId;
+    };
+    if (!msgData.mailboxId || typeof msgData.mailboxId !== 'string') {
+      throw new Error(
+        'createWildduckSubscribeRequest: data.mailboxId must be a non-empty string for messages channel'
+      );
+    }
+  }
   return {
     type: 'subscribe',
     channel,
@@ -675,6 +728,15 @@ export function createWildduckSubscribeRequest<T extends WildduckWebSocketChanne
 export function createWildduckUnsubscribeRequest(
   channel: WildduckWebSocketChannel
 ): WildduckUnsubscribeRequest {
+  if (
+    !channel ||
+    typeof channel !== 'string' ||
+    !VALID_CHANNELS.includes(channel)
+  ) {
+    throw new Error(
+      `createWildduckUnsubscribeRequest: channel must be one of: ${VALID_CHANNELS.join(', ')}`
+    );
+  }
   return {
     type: 'unsubscribe',
     channel,
@@ -689,6 +751,11 @@ export function createWildduckFetchMessagesRequest(
   mailboxId: WildduckObjectId,
   cursor?: string
 ): WildduckFetchMessagesRequest {
+  if (!mailboxId || typeof mailboxId !== 'string') {
+    throw new Error(
+      'createWildduckFetchMessagesRequest: mailboxId must be a non-empty string'
+    );
+  }
   return {
     type: 'fetch',
     channel: 'messages',

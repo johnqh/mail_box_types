@@ -20,38 +20,51 @@ import { ChainType } from '@sudobility/types';
 // =======================
 
 /**
- * Transaction confirmation status levels
+ * Transaction confirmation status levels.
+ *
+ * Represents the progression of a blockchain transaction from initial
+ * processing through to finalization. On EVM chains these map to
+ * block confirmations; on Solana they map to commitment levels
+ * (processed -> confirmed -> finalized).
  */
 export enum ConfirmationStatus {
-  /** Transaction has been processed but not yet confirmed */
+  /** Transaction has been processed but not yet included in a confirmed block. On Solana: "processed" commitment. */
   Processed = 'processed',
-  /** Transaction has been confirmed in a block */
+  /** Transaction has been confirmed in a block with sufficient confirmations. On Solana: "confirmed" commitment. */
   Confirmed = 'confirmed',
-  /** Transaction has been finalized and is irreversible */
+  /** Transaction has been finalized and is irreversible. On Solana: "finalized" commitment. */
   Finalized = 'finalized',
 }
 
 /**
- * Types of revenue claims
+ * Types of revenue claims in the mailbox contract.
+ *
+ * When priority messages are sent, a portion of the fee becomes
+ * claimable revenue. This enum identifies who is claiming and under
+ * what conditions.
  */
 export enum ClaimType {
-  /** Claim by message recipient */
+  /** Claim by the message recipient. Revenue share from priority messages received. */
   Recipient = 'recipient',
-  /** Claim by contract owner */
+  /** Claim by the contract owner. Protocol fees and unclaimed revenue. */
   Owner = 'owner',
-  /** Claim of expired revenue */
+  /** Claim of expired revenue. Revenue that was not claimed before its expiry timestamp. */
   Expired = 'expired',
 }
 
 /**
- * Fee types in the mailbox contract
+ * Fee types in the mailbox contract.
+ *
+ * Each operation in the mailbox protocol incurs a specific fee type.
+ * Fee amounts are denominated in micro-USDC and can be updated by
+ * the contract owner.
  */
 export enum FeeType {
-  /** Fee for sending messages */
+  /** Fee for sending messages. Charged per message sent through the mailbox contract. */
   Send = 'send',
-  /** Fee for delegation operations */
+  /** Fee for delegation operations. Charged when delegating mailbox access to another address. */
   Delegation = 'delegation',
-  /** Fee for domain registration */
+  /** Fee for domain registration. Charged when registering or extending a mailbox domain name. */
   Registration = 'registration',
 }
 
@@ -60,7 +73,11 @@ export enum FeeType {
 // =======================
 
 /**
- * Base response structure for all blockchain operations
+ * Base response structure for all blockchain operations.
+ *
+ * Every on-chain operation in the mailbox protocol returns at minimum
+ * a transaction hash, chain type, and success indicator. Extended by
+ * {@link TransactionReceipt} for richer block-level details.
  */
 export interface BaseTransactionResponse {
   /** Transaction hash/signature */
@@ -76,7 +93,11 @@ export interface BaseTransactionResponse {
 }
 
 /**
- * Enhanced transaction response with block information
+ * Enhanced transaction response with block-level information.
+ *
+ * Extends {@link BaseTransactionResponse} with block number, slot,
+ * gas usage, and confirmation status. This is the base for most
+ * operation-specific response types like {@link MessageSendResponse}.
  */
 export interface TransactionReceipt extends BaseTransactionResponse {
   /** Block number (EVM) or slot (Solana) */
@@ -94,7 +115,11 @@ export interface TransactionReceipt extends BaseTransactionResponse {
 // =======================
 
 /**
- * Response for message sending operations
+ * Response for message sending operations.
+ *
+ * Returned after a message is sent through the mailbox contract.
+ * Includes the fee paid, priority status, and any claimable revenue
+ * share for the recipient if the message was sent as priority.
  */
 export interface MessageSendResponse extends TransactionReceipt {
   /** Message identifier (if available) */
@@ -116,7 +141,10 @@ export interface MessageSendResponse extends TransactionReceipt {
 }
 
 /**
- * Response for pre-prepared message sending
+ * Response for pre-prepared message sending.
+ *
+ * Returned when sending a message that was previously prepared and
+ * stored off-chain. The mailId links back to the prepared message.
  */
 export interface PreparedMessageSendResponse extends TransactionReceipt {
   /** Pre-prepared message identifier */
@@ -136,7 +164,11 @@ export interface PreparedMessageSendResponse extends TransactionReceipt {
 // =======================
 
 /**
- * Information about claimable revenue shares
+ * Information about claimable revenue shares.
+ *
+ * Describes a revenue share that can be claimed from the mailbox contract.
+ * Revenue shares are created when priority messages are sent and expire
+ * after a configurable time period.
  */
 export interface ClaimableInfo {
   /** Amount available to claim */
@@ -150,7 +182,10 @@ export interface ClaimableInfo {
 }
 
 /**
- * Response for revenue claim operations
+ * Response for revenue claim operations.
+ *
+ * Returned after claiming revenue from the mailbox contract. Includes
+ * the claimed amount, remaining balance, and the type of claim made.
  */
 export interface ClaimRevenueResponse extends TransactionReceipt {
   /** Amount claimed */
@@ -162,7 +197,10 @@ export interface ClaimRevenueResponse extends TransactionReceipt {
 }
 
 /**
- * Response for checking claimable amounts
+ * Response for checking claimable amounts.
+ *
+ * Provides a snapshot of all claimable revenue for a given address,
+ * broken down by recipient and owner shares.
  */
 export interface ClaimableAmountResponse {
   /** Recipient claimable information */
@@ -178,7 +216,10 @@ export interface ClaimableAmountResponse {
 // =======================
 
 /**
- * Response for domain registration operations
+ * Response for domain registration operations.
+ *
+ * Returned after registering or extending a mailbox domain name.
+ * Domain registration binds a human-readable name to a wallet address.
  */
 export interface DomainRegistrationResponse extends TransactionReceipt {
   /** Registered domain name */
@@ -192,7 +233,10 @@ export interface DomainRegistrationResponse extends TransactionReceipt {
 }
 
 /**
- * Response for delegation operations
+ * Response for delegation operations.
+ *
+ * Returned after delegating mailbox access to another address. Delegation
+ * allows a delegate to send and receive messages on behalf of the delegator.
  */
 export interface MailboxDelegationResponse extends TransactionReceipt {
   /** Address that created the delegation */
@@ -206,7 +250,10 @@ export interface MailboxDelegationResponse extends TransactionReceipt {
 }
 
 /**
- * Response for delegation rejection operations
+ * Response for delegation rejection operations.
+ *
+ * Returned when a delegate rejects an incoming delegation request.
+ * The delegate can choose not to accept mailbox access from the delegator.
  */
 export interface DelegationRejectionResponse extends TransactionReceipt {
   /** Address that rejected the delegation */
@@ -220,7 +267,10 @@ export interface DelegationRejectionResponse extends TransactionReceipt {
 // =======================
 
 /**
- * Current fee information
+ * Current fee information for the mailbox contract.
+ *
+ * Contains the current fee amounts for all operations. Fees are
+ * denominated in micro-USDC (1 USDC = 1,000,000 micro-USDC).
  */
 export interface FeeInfo {
   /** Current send fee (in micro-USDC) */
@@ -234,7 +284,10 @@ export interface FeeInfo {
 }
 
 /**
- * Response for fee update operations
+ * Response for fee update operations.
+ *
+ * Returned after the contract owner updates a fee amount. Includes
+ * the previous and new fee values for audit purposes.
  */
 export interface FeeUpdateResponse extends TransactionReceipt {
   /** Type of fee that was updated */
@@ -250,7 +303,10 @@ export interface FeeUpdateResponse extends TransactionReceipt {
 // =======================
 
 /**
- * Contract pause status information
+ * Contract pause status information.
+ *
+ * Reports whether the mailbox contract is currently paused.
+ * When paused, no new messages can be sent and no revenue can be claimed.
  */
 export interface PauseInfo {
   /** Whether the contract is currently paused */
@@ -262,7 +318,10 @@ export interface PauseInfo {
 }
 
 /**
- * Response for pause/unpause operations
+ * Response for pause/unpause operations.
+ *
+ * Returned after the contract owner pauses or unpauses the contract.
+ * Emergency pauses bypass normal governance timelock requirements.
  */
 export interface PauseResponse extends TransactionReceipt {
   /** New pause status */
@@ -272,7 +331,10 @@ export interface PauseResponse extends TransactionReceipt {
 }
 
 /**
- * Emergency fund distribution response
+ * Emergency fund distribution response.
+ *
+ * Returned after an emergency fund distribution is executed by the
+ * contract owner. Used to distribute contract funds in emergency scenarios.
  */
 export interface EmergencyDistributionResponse extends TransactionReceipt {
   /** Amount distributed */
@@ -286,7 +348,11 @@ export interface EmergencyDistributionResponse extends TransactionReceipt {
 // =======================
 
 /**
- * EVM-specific response additions
+ * EVM-specific transaction response.
+ *
+ * Extends {@link TransactionReceipt} with EVM-specific fields such as
+ * block number, gas usage, gas price, and deployed contract address.
+ * The `chainType` is narrowed to `ChainType.EVM`.
  */
 export interface EVMTransactionResponse extends TransactionReceipt {
   chainType: ChainType.EVM;
@@ -301,7 +367,11 @@ export interface EVMTransactionResponse extends TransactionReceipt {
 }
 
 /**
- * Solana-specific response additions
+ * Solana-specific transaction response.
+ *
+ * Extends {@link TransactionReceipt} with Solana-specific fields such as
+ * slot number, compute units consumed, and transaction fee in lamports.
+ * The `chainType` is narrowed to `ChainType.SOLANA`.
  */
 export interface SolanaTransactionResponse extends TransactionReceipt {
   chainType: ChainType.SOLANA;
@@ -318,7 +388,11 @@ export interface SolanaTransactionResponse extends TransactionReceipt {
 // =======================
 
 /**
- * Unified client response for cross-chain operations
+ * Unified client response for cross-chain operations.
+ *
+ * Wraps the standard {@link BaseResponse} with chain-specific metadata.
+ * Used by the client library to provide a consistent interface across
+ * EVM and Solana chains.
  */
 export interface UnifiedClientResponse<T = unknown> extends BaseResponse<T> {
   /** Chain where operation occurred */
@@ -331,7 +405,11 @@ export interface UnifiedClientResponse<T = unknown> extends BaseResponse<T> {
 }
 
 /**
- * Batch operation response
+ * Batch operation response.
+ *
+ * Returned when executing multiple operations in a single transaction
+ * (e.g., sending multiple messages). Includes per-operation results
+ * and aggregate success/failure counts.
  */
 export interface BatchOperationResponse extends BaseTransactionResponse {
   /** Results for each operation in the batch */
@@ -351,7 +429,10 @@ export interface BatchOperationResponse extends BaseTransactionResponse {
 // =======================
 
 /**
- * Message history item structure
+ * Message history item structure.
+ *
+ * Represents a single message in the user's message history query.
+ * Extends {@link MessageBase} with on-chain transaction details.
  */
 export interface MessageHistoryItem extends MessageBase {
   messageId: string;
@@ -362,13 +443,19 @@ export interface MessageHistoryItem extends MessageBase {
 }
 
 /**
- * Response for querying message history
+ * Response for querying message history.
+ *
+ * Paginated list of {@link MessageHistoryItem} entries. Extends
+ * {@link PaginatedResponse} from `@sudobility/types`.
  */
 export interface MessageHistoryResponse
   extends PaginatedResponse<MessageHistoryItem> {}
 
 /**
- * Response for querying delegation status
+ * Response for querying delegation status.
+ *
+ * Provides a comprehensive view of an address's delegation state,
+ * including outgoing delegation, incoming delegations, and total fees paid.
  */
 export interface DelegationStatusResponse {
   /** Current delegation target (null if no delegation) */
@@ -386,7 +473,11 @@ export interface DelegationStatusResponse {
 // =======================
 
 /**
- * Contract error type (re-export of UnifiedError)
+ * Contract error type.
+ *
+ * Re-export of {@link UnifiedError} from `@sudobility/types`. Used to
+ * represent errors originating from smart contract interactions on
+ * both EVM and Solana chains.
  */
 export type ContractError = UnifiedError;
 

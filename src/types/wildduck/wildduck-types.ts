@@ -156,6 +156,11 @@ export function createPreAuthRequest(
   username: string,
   options?: Partial<WildduckPreAuthRequest>
 ): WildduckPreAuthRequest {
+  if (!username || typeof username !== 'string') {
+    throw new Error(
+      'createPreAuthRequest: username must be a non-empty string'
+    );
+  }
   return {
     username,
     scope: 'master',
@@ -169,6 +174,11 @@ export function createAuthenticateRequest(
   message?: string,
   options?: Partial<WildduckAuthenticateRequest>
 ): WildduckAuthenticateRequest {
+  if (!username || typeof username !== 'string') {
+    throw new Error(
+      'createAuthenticateRequest: username must be a non-empty string'
+    );
+  }
   return {
     username,
     ...(signature && { signature }),

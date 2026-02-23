@@ -49,6 +49,22 @@ describe('WildDuck Type Guards', () => {
       expect(isWildduckAuthResponse(123)).toBe(false);
       expect(isWildduckAuthResponse(true)).toBe(false);
     });
+
+    it('returns false for empty object', () => {
+      expect(isWildduckAuthResponse({})).toBe(false);
+    });
+
+    it('returns false for array', () => {
+      expect(isWildduckAuthResponse([{ success: true }])).toBe(false);
+    });
+
+    it('returns false for success as number 1', () => {
+      expect(isWildduckAuthResponse({ success: 1 })).toBe(false);
+    });
+
+    it('returns false for success as null', () => {
+      expect(isWildduckAuthResponse({ success: null })).toBe(false);
+    });
   });
 
   describe('isWildduckMessage', () => {
@@ -117,6 +133,26 @@ describe('WildDuck Type Guards', () => {
       expect(isWildduckMessage(123)).toBe(false);
       expect(isWildduckMessage(true)).toBe(false);
     });
+
+    it('returns false for empty object', () => {
+      expect(isWildduckMessage({})).toBe(false);
+    });
+
+    it('returns false for id as boolean', () => {
+      expect(isWildduckMessage({ id: true, subject: 'Test' })).toBe(
+        false
+      );
+    });
+
+    it('returns false for subject as null', () => {
+      expect(isWildduckMessage({ id: 1, subject: null })).toBe(false);
+    });
+
+    it('returns false for id as null', () => {
+      expect(isWildduckMessage({ id: null, subject: 'Test' })).toBe(
+        false
+      );
+    });
   });
 });
 
@@ -145,8 +181,34 @@ describe('WildDuck Helper Functions', () => {
     });
 
     it('allows overriding default scope', () => {
-      const request = createPreAuthRequest('testuser', { scope: 'pop3' });
+      const request = createPreAuthRequest('testuser', {
+        scope: 'pop3',
+      });
       expect(request.scope).toBe('pop3');
+    });
+
+    it('throws for empty username', () => {
+      expect(() => createPreAuthRequest('')).toThrow(
+        'username must be a non-empty string'
+      );
+    });
+
+    it('throws for non-string username', () => {
+      expect(() =>
+        createPreAuthRequest(123 as unknown as string)
+      ).toThrow('username must be a non-empty string');
+    });
+
+    it('throws for null username', () => {
+      expect(() =>
+        createPreAuthRequest(null as unknown as string)
+      ).toThrow('username must be a non-empty string');
+    });
+
+    it('throws for undefined username', () => {
+      expect(() =>
+        createPreAuthRequest(undefined as unknown as string)
+      ).toThrow('username must be a non-empty string');
     });
   });
 
@@ -178,11 +240,16 @@ describe('WildDuck Helper Functions', () => {
     });
 
     it('creates an authenticate request with custom options', () => {
-      const request = createAuthenticateRequest('testuser', undefined, undefined, {
-        referralCode: 'REF123',
-        sess: 'session456',
-        ip: '10.0.0.1',
-      });
+      const request = createAuthenticateRequest(
+        'testuser',
+        undefined,
+        undefined,
+        {
+          referralCode: 'REF123',
+          sess: 'session456',
+          ip: '10.0.0.1',
+        }
+      );
       expect(request).toEqual({
         username: 'testuser',
         protocol: 'API',
@@ -214,7 +281,11 @@ describe('WildDuck Helper Functions', () => {
     });
 
     it('does not include signature if undefined but includes message if provided', () => {
-      const request = createAuthenticateRequest('testuser', undefined, 'message');
+      const request = createAuthenticateRequest(
+        'testuser',
+        undefined,
+        'message'
+      );
       expect(request).not.toHaveProperty('signature');
       // message is included independently of signature
       expect(request).toHaveProperty('message', 'message');
@@ -224,6 +295,30 @@ describe('WildDuck Helper Functions', () => {
       const request = createAuthenticateRequest('testuser');
       expect(request).not.toHaveProperty('signature');
       expect(request).not.toHaveProperty('message');
+    });
+
+    it('throws for empty username', () => {
+      expect(() => createAuthenticateRequest('')).toThrow(
+        'username must be a non-empty string'
+      );
+    });
+
+    it('throws for non-string username', () => {
+      expect(() =>
+        createAuthenticateRequest(42 as unknown as string)
+      ).toThrow('username must be a non-empty string');
+    });
+
+    it('throws for null username', () => {
+      expect(() =>
+        createAuthenticateRequest(null as unknown as string)
+      ).toThrow('username must be a non-empty string');
+    });
+
+    it('throws for undefined username', () => {
+      expect(() =>
+        createAuthenticateRequest(undefined as unknown as string)
+      ).toThrow('username must be a non-empty string');
     });
   });
 });
