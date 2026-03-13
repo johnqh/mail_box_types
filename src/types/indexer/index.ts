@@ -94,7 +94,7 @@ export type {
 
   // Generic response types
   IndexerApiResponse,
-} from './indexer-responses';
+} from './indexer-responses.js';
 
 // Export type guards
 export {
@@ -123,4 +123,4 @@ export {
   isWebhookDeleteResponse,
   isIndexerErrorResponse,
   isIndexerSuccessResponse,
-} from './indexer-guards';
+} from './indexer-guards.js';

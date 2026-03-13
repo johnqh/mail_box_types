@@ -1,2 +1,2 @@
 // KYC verification types
-export * from './kyc-types';
+export * from './kyc-types.js';

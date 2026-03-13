@@ -1,2 +1,2 @@
 // Mailer and mailbox contract response types
-export * from './mail-types';
+export * from './mail-types.js';

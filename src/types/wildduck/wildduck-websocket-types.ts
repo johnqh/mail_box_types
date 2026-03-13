@@ -12,7 +12,7 @@ import type {
   WildduckAutoreplyResponse,
   WildduckMessageListItem,
   WildduckObjectId,
-} from './wildduck-types';
+} from './wildduck-types.js';
 
 // ============================================================================
 // WebSocket Channel Types

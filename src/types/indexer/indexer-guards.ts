@@ -27,7 +27,7 @@ import type {
   IndexerWebhookResponse,
   IndexerWebhookListResponse,
   IndexerWebhookDeleteResponse,
-} from './indexer-responses';
+} from './indexer-responses.js';
 
 // Basic type guards for indexer responses
 export function isIndexerErrorResponse(
