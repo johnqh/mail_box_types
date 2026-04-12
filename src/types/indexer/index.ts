@@ -89,6 +89,68 @@ export type {
   IndexerWebhookDeleteResponse,
   IndexerWebhookCreateRequest,
 
+  // Contract permissions types
+  IndexerContractPermissionsData,
+  IndexerContractPermissionsResponse,
+
+  // Wallet permissions types
+  IndexerWalletPermissionsData,
+  IndexerWalletPermissionsResponse,
+
+  // Points info types
+  IndexerPointsInfoSiteStats,
+  IndexerPointsInfoTopUser,
+  IndexerPointsInfoData,
+  IndexerPointsInfoResponse,
+
+  // 3DNS resolution types
+  IndexerThreeDnsResolutionData,
+  IndexerThreeDnsResolutionResponse,
+
+  // Recalculate types
+  IndexerRecalculateData,
+  IndexerRecalculateResponse,
+
+  // Authenticate types
+  IndexerAuthenticateData,
+  IndexerAuthenticateResponse,
+
+  // Verify types
+  IndexerVerifyData,
+  IndexerVerifyResponse,
+
+  // KYC API response wrappers
+  IndexerKYCInitiateResponse,
+  IndexerKYCStatusResponse,
+  IndexerKYCWebhookData,
+  IndexerKYCWebhookResponse,
+
+  // Solana API response types
+  IndexerSolanaWebhookData,
+  IndexerSolanaWebhookResponse,
+  IndexerSolanaSetupResult,
+  IndexerSolanaSetupData,
+  IndexerSolanaSetupResponse,
+  IndexerSolanaIndexerStatus,
+  IndexerSolanaStatusData,
+  IndexerSolanaStatusResponse,
+  IndexerSolanaTestTransactionData,
+  IndexerSolanaTestTransactionResponse,
+
+  // OAuth response types
+  IndexerOAuthChallengeData,
+  IndexerOAuthChallengeResponse,
+  IndexerOAuthVerifyData,
+  IndexerOAuthVerifyResponse,
+  IndexerOAuthAuthorizeData,
+  IndexerOAuthAuthorizeResponse,
+  IndexerOAuthTokenData,
+  IndexerOAuthTokenResponse,
+  IndexerOAuthUserInfoData,
+  IndexerOAuthUserInfoResponse,
+  IndexerOAuthClientInfoData,
+  IndexerOAuthClientInfoResponse,
+
   // Error response types
   IndexerErrorResponse,
 
