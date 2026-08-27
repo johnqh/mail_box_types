@@ -1,5 +1,10 @@
 # mail_box_types - AI Development Guide
 
+> **Git policy — never auto-commit or auto-push.** Leave your work in the working tree.
+> Run `git commit`, `git push`, `gh pr create`, or `scripts/push_all.sh` **only when the user
+> explicitly asks in that turn**. Approval for an earlier change does not carry forward, and
+> finishing a task is not permission to commit it.
+
 ## Overview
 
 `@sudobility/mail_box_types` is a TypeScript types-only library that provides comprehensive type definitions, enums, type guards, and helper functions for the Mail Box protocol. It covers four domains: the blockchain Indexer API, the WildDuck mail server (REST and WebSocket), KYC/Sumsub identity verification, and multi-chain mailbox smart contract interactions (EVM and Solana). All runtime values (enums, type guards, factory functions) are shipped alongside pure type definitions.
@@ -284,3 +289,7 @@ Tests use Vitest with global test functions (`describe`, `it`, `expect`) and are
 | `eslint` + `@typescript-eslint/*` (dev) | Linting |
 | `prettier` (dev) | Code formatting |
 | `rimraf` (dev) | Clean script |
+
+## Git Workflow
+
+- Do not use feature branches for code changes. Always stay on the current branch.
